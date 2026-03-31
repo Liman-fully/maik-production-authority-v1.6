@@ -1,0 +1,31 @@
+export declare class Talent {
+    id: string;
+    userId: string;
+    name: string;
+    currentTitle: string;
+    currentCompany: string;
+    experience: string;
+    education: string;
+    location: string;
+    expectedSalary: string;
+    skills: string[];
+    jobStatus: string;
+    age: number;
+    industry: string;
+    gender: string;
+    jobType: string;
+    workExperience: string;
+    educationYear: string;
+    skillsCount: number;
+    lastActive: Date;
+    matchScore: number;
+    personalScore: number;
+    resumeComplete: boolean;
+    isPublic: boolean;
+    tier: string;
+    classification: string[];
+    score: number;
+    verified: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+}

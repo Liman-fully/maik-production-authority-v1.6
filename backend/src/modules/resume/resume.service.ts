@@ -134,7 +134,7 @@ export class ResumeService {
           Object.assign(existingTalent, this.mapAiResultToTalent(aiResult));
           existingTalent.score = score;
           existingTalent.tier = tier;
-          await this.talentRepository.save(existingTalent);
+          await this.talentRepository.save(existingTalent as any);
         }
       }
 

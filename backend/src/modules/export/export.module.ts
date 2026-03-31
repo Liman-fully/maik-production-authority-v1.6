@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BullModule } from '@nestjs/bull';
 import { ExportTask } from './export-task.entity';
 import { Resume } from '../resume/resume.entity';
 import { DownloadLog } from './download-log.entity';
@@ -14,6 +15,7 @@ import { DownloadModule } from '../download/download.module';
   imports: [
     TypeOrmModule.forFeature([ExportTask, Resume, DownloadLog]),
     DownloadModule,
+    BullModule.registerQueue({ name: 'export' }),
   ],
   controllers: [ExportController],
   providers: [
@@ -21,18 +23,6 @@ import { DownloadModule } from '../download/download.module';
     PdfExporter,
     ExcelExporter,
     RedisService,
-    {
-      provide: 'EXPORT_QUEUE',
-      useFactory: () => {
-        const Queue = require('bull');
-        return new Queue('export', {
-          redis: {
-            host: process.env.REDIS_HOST || 'localhost',
-            port: Number(process.env.REDIS_PORT) || 6379,
-          },
-        });
-      },
-    },
   ],
   exports: [ExportService],
 })

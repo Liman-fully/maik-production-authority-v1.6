@@ -1,5 +1,6 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { InjectQueue } from '@nestjs/bull';
 import { Repository } from 'typeorm';
 import { Queue } from 'bull';
 import { ExportTask, TaskStatus } from './export-task.entity';
@@ -15,7 +16,7 @@ export class ExportService {
     private taskRepo: Repository<ExportTask>,
     @InjectRepository(Resume)
     private resumeRepo: Repository<Resume>,
-    @Inject('EXPORT_QUEUE')
+    @InjectQueue('export')
     private exportQueue: Queue,
     private pdfExporter: PdfExporter,
     private excelExporter: ExcelExporter,
