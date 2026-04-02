@@ -41,6 +41,10 @@ export class User {
   @Column({ nullable: true, length: 200 })
   company: string;
 
+  // 推荐人ID（用于分账）
+  @Column({ name: 'referrer_id', nullable: true })
+  referrerId: string;
+
   @Column({ default: true, name: 'is_active' })
   isActive: boolean;
 

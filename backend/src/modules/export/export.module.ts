@@ -15,7 +15,13 @@ import { DownloadModule } from '../download/download.module';
   imports: [
     TypeOrmModule.forFeature([ExportTask, Resume, DownloadLog]),
     DownloadModule,
-    BullModule.registerQueue({ name: 'export' }),
+    BullModule.registerQueue({
+      name: 'export',
+      redis: process.env.REDIS_HOST && process.env.REDIS_HOST !== 'localhost' ? {
+        host: process.env.REDIS_HOST,
+        port: Number(process.env.REDIS_PORT) || 6379,
+      } : undefined,
+    }),
   ],
   controllers: [ExportController],
   providers: [

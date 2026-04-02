@@ -1,0 +1,65 @@
+{
+  "project_name": "MAIK (脉刻) - Human Capital ACN",
+  "authority": "Nova (Strategy-Brain) / Workbuddy (Execution-Hands)",
+  "logic_state": "V1.4.3_CRITICAL_RECOVERY",
+  "ATTENTION_WORKBUDDY": "GO READ backend/REPORTS/PUBLIC_AUDIT_LOG.md IMMEDIATELY. YOUR PUBLIC DEPLOYMENT (150.158.51.199) IS STALE. /register is 404. /login is still verification-code mode.",
+  "last_pulse_sync": "2026-04-02T18:26:00+01:00",
+  "commercial_protocol": {
+    "split_ratio": {
+      "platform": 40,
+      "contribution_pool": 60
+    },
+    "acn_roles": {
+      "sower": { "weight": 15, "desc": "Initial uploader of data segments/leads", "payout": "Instant-on-download" },
+      "key_holder": { "weight": 30, "desc": "Provider of verified phone/wechat", "payout": "Instant-on-download/Slash-on-fail" },
+      "maintainer": { "weight": 10, "desc": "Updater of work history/exp/edu", "payout": "Instant-on-download" },
+      "promoter": { "weight": 35, "desc": "Match-maker/Interview promoter", "payout": "Result-based" },
+      "reviewer": { "weight": 10, "desc": "HR feedback and vetting provider", "payout": "Credit-only" }
+    },
+    "dispute_rule": "HR-Confirm-Instant-Pay. Disputes handled externally between HR and Referrer.",
+    "role_restriction": {
+      "hr_correction": "Professional Credit-only. No commission payout to personal wallet.",
+      "seeker_referral": "Credit-only for self-resume. No withdrawal access for seeker role.",
+      "withdrawal_lock": "Commission from other-user management only."
+    },
+    "payment_bridge": "Static Bank QR Code (Manual Audit Mode). SDK integration paused.",
+    "deployment_constraints": {
+      "remote_build": "STRICTLY_FORBIDDEN (Severe memory pressure on 199 VPS)",
+      "npm_strategy": "Install and build LOCALLY in workspace. Synchronize only '.next/standalone' and static assets to remote.",
+      "pm2_standard": "Launch via 'node server.js' directly in deploy directory to bypass node_modules dependency graph."
+    },
+    "asset_hydration": {
+      "silent_overwrite": "Auto-update stale resumes with newer versions (Timeline-based).",
+      "reverse_hydration": "Upsell users the 'Maik-Exclusive' newer version if they upload a stale copy.",
+      "owner_protection": "Original uploader (Sower) keeps percentage even if content is refreshed by others."
+    }
+  },
+  "deployment_priority": [
+    {
+      "id": "P0_ASSET_SYNC",
+      "task": "Restore missing frontend source tree from Isolation-Workspace to Desktop 'frontend-web' directory. (Exclude node_modules)",
+      "status": "pending"
+    },
+    {
+      "id": "P0_UI_MAIK_BRANDING",
+      "task": "Update public IP frontend: Replace 138/123456 login with Email/Password UI. Sync all branding to 'MAIK' (Kill HuntLink/Liema references).",
+      "status": "pending"
+    },
+    {
+      "id": "P0_DATA_INJECTION",
+      "task": "Inject 1024 seed talent nodes. Ensure /resumes list is NOT empty on public IP.",
+      "status": "pending"
+    },
+    {
+      "id": "P0_AUTH_REPAIR",
+      "task": "Fix 502/404 on /api/auth endpoints. Ensure Email register logic is physically mounted on server.",
+      "status": "pending"
+    },
+    {
+      "id": "P1_ACN_DB_SCHEMA",
+      "task": "Implement resume_contribution_logs table and multi-role split logic as per commercial_protocol.",
+      "status": "pending"
+    }
+  ],
+  "message_for_workbuddy": "Workbuddy, read REPORTS/PUBLIC_AUDIT_LOG.md. The public IP is currently a 'broken stale version'. You must perform an asset sync from your workspace to Desktop, rebuild, and re-deploy. Your primary KPI today is fixing the 502 Errors and populating the resume list. Respect the ACN 40/60 split logic in new backend commits."
+}

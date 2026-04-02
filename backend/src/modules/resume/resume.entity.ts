@@ -5,7 +5,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Index,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+import { User } from '../user/user.entity';
 
 @Entity('resumes')
 export class Resume {
@@ -15,6 +18,10 @@ export class Resume {
   @Column({ name: 'user_id' })
   @Index()
   userId: string;
+
+  @ManyToOne(() => User, { nullable: true })
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @Column({ name: 'file_path' })
   filePath: string;
@@ -128,6 +135,10 @@ export class Resume {
   // 来源
   @Column({ name: 'source', default: 'upload' })
   source: string; // upload, email, import
+
+  // 元数据（存储分账信息等）
+  @Column({ type: 'json', nullable: true })
+  metadata: any;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

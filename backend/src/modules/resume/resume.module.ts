@@ -17,6 +17,7 @@ import { MetadataModule } from '../metadata/metadata.module';
 import { ScoreModule } from '../score/score.module';
 import { RecommendationModule } from '../recommendation/recommendation.module';
 import { Talent } from '../talent/talent.entity';
+import { RevenueSplitService } from './revenue-split.service';
 
 @Module({
   imports: [
@@ -26,8 +27,20 @@ import { Talent } from '../talent/talent.entity';
     ScoreModule,
     RecommendationModule,
     BullModule.registerQueue(
-      { name: 'resume-parsing' },
-      { name: 'email-fetching' },
+      {
+        name: 'resume-parsing',
+        redis: process.env.REDIS_HOST && process.env.REDIS_HOST !== 'localhost' ? {
+          host: process.env.REDIS_HOST,
+          port: Number(process.env.REDIS_PORT) || 6379,
+        } : undefined,
+      },
+      {
+        name: 'email-fetching',
+        redis: process.env.REDIS_HOST && process.env.REDIS_HOST !== 'localhost' ? {
+          host: process.env.REDIS_HOST,
+          port: Number(process.env.REDIS_PORT) || 6379,
+        } : undefined,
+      },
     ),
   ],
   controllers: [ResumeController],
@@ -40,7 +53,8 @@ import { Talent } from '../talent/talent.entity';
     EmailFetchProcessor,
     DeduplicationService,
     MarkdownConverter,
+    RevenueSplitService,
   ],
-  exports: [ResumeService, MarkdownConverter],
+  exports: [ResumeService, MarkdownConverter, RevenueSplitService],
 })
 export class ResumeModule {}

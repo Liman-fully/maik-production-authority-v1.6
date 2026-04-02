@@ -1,11 +1,12 @@
 import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { BullModule } from '@nestjs/bull';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RedisModule } from './common/redis/redis.module';
 import { CacheModule } from './common/cache/cache.module';
 import { CosModule } from './common/storage/cos.module';
+import { HealthModule } from './common/health/health.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { TalentModule } from './modules/talent/talent.module';
@@ -32,7 +33,7 @@ import { MetadataModule } from './modules/metadata/metadata.module';
 import { IndexMaintenanceService } from './common/maintenance/index-maintenance.service';
 import { QueryLoggingMiddleware } from './common/middleware/query-logging.middleware';
 import { TalentEventListener } from './modules/talent/talent-event-listener';
-import { ExportProcessor } from './export.processor';
+// import { ExportProcessor } from './export.processor';
 
 @Module({
   imports: [
@@ -41,35 +42,44 @@ import { ExportProcessor } from './export.processor';
     CacheModule,
     CosModule,
     ConfigModule.forRoot({ isGlobal: true }),
-    BullModule.forRoot({
-      redis: {
-        host: process.env.REDIS_HOST || 'localhost',
-        port: Number(process.env.REDIS_PORT) || 6379,
-      },
-    }),
+    // BullModule.forRoot({
+    //   redis: {
+    //     host: process.env.REDIS_HOST || 'localhost',
+    //     port: Number(process.env.REDIS_PORT) || 6379,
+    //     connectTimeout: 1000,
+    //     lazyConnect: true,
+    //   },
+    //   defaultJobOptions: {
+    //     attempts: 1,
+    //     removeOnComplete: 10,
+    //     removeOnFail: 10,
+    //   },
+    // }),
     TypeOrmModule.forRootAsync({
-      useFactory: () => ({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: process.env.DB_HOST || 'localhost',
-        port: Number(process.env.DB_PORT) || 5432,
-        username: process.env.DB_USERNAME || process.env.DB_USER || 'postgres',
-        password: process.env.DB_PASSWORD || process.env.DB_PASS || '',
-        database: process.env.DB_DATABASE || process.env.DB_NAME || 'huntlink',
+        host: configService.get('DB_HOST') || 'localhost',
+        port: configService.get('DB_PORT') || 5432,
+        username: configService.get('DB_USERNAME') || configService.get('DB_USER') || 'postgres',
+        password: configService.get('DB_PASSWORD') || configService.get('DB_PASS') || '',
+        database: configService.get('DB_DATABASE') || configService.get('DB_NAME') || 'huntlink',
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: process.env.NODE_ENV !== 'production',
+        synchronize: configService.get('NODE_ENV') !== 'production',
         logging: false,
         retryDelay: 5000,
         retryAttempts: 99,
       }),
+      inject: [ConfigService],
     }),
-    QueueModule,
+    // QueueModule,
     DeepSeekModule,
     AuthModule,
     UserModule,
     TalentModule,
     JobModule,
     ScoreModule,
-    ResumeModule,
+    ResumeModule, // ✅ 修复：启用简历模块，恢复邮箱拉取功能
     StatisticsModule,
     NotificationModule,
     AuthorizationModule,
@@ -80,16 +90,17 @@ import { ExportProcessor } from './export.processor';
     InvitationModule,
     CandidateModule,
     InterviewModule,
-    ExportModule,
+    // ExportModule,
     DownloadModule,
     RecommendationModule,
     SearchLogModule,
     MetadataModule,
+    HealthModule,
   ],
   providers: [
     IndexMaintenanceService,
     TalentEventListener,
-    ExportProcessor,
+    // ExportProcessor,
   ],
 })
 export class AppModule {

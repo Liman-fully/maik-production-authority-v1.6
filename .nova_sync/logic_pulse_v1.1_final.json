@@ -1,0 +1,125 @@
+{
+  "timestamp": "2026-04-02T09:03:00+01:00",
+  "priority": "P0_LAUNCH_OR_DIE",
+  "task": "FINAL_V1_MANIFEST_SHIP",
+  "instruction": [
+    "History merged from .nova_sync, REPORTS, and .workbuddy records.",
+    "Core objective: complete Huntlink / MAIK V1 rollout and preserve deployment traceability.",
+    "Current workstream: resolve remaining product, deployment, and verification items listed below before further release steps."
+  ],
+  "history": {
+    "2026-03-31": [
+      {
+        "source": "REPORTS/WORKBUDDY_LOG.md",
+        "summary": "Nova CTO tactical refactor completed; UI spacing and talent-card styling adjusted; SSH tunnel established to remote PostgreSQL; backend and frontend both started locally; public production frontend deployment completed with standalone build, PM2, and Nginx reverse proxy."
+      }
+    ],
+    "2026-04-01": [
+      {
+        "source": "REPORTS/deploy-auto-2026-04-01.log",
+        "summary": "Brand final deployment cycle: HealthController added, RedisService.ping added, HealthModule wired into AppModule, frontend and backend builds succeeded, initial remote deployment was skipped in one run due to confirmation limits, then social component emergency fix deployed successfully."
+      },
+      {
+        "source": "REPORTS/deploy-auto-2026-04-01.log",
+        "summary": "Emergency social feature restoration: ChatActionMenu added, plus button added to message dialog header, and submenu actions restored for exchange phone, exchange WeChat, add friend, and create group."
+      },
+      {
+        "source": "REPORTS/deploy-auto-2026-04-01.log",
+        "summary": "Code change batch detected: 8 frontend pages updated and 9 backend source files updated, including revenue-split service, health modules, guards, and services."
+      },
+      {
+        "source": ".workbuddy/memory/2026-04-01.md",
+        "summary": "Local build succeeded for frontend and backend, but remote deployment was skipped because the automation task would not execute a user-confirmed remote operation. Health check showed frontend HTTP 200 and backend API 404 at that time."
+      },
+      {
+        "source": ".workbuddy/automations/nova/memory.md",
+        "summary": "Automation monitor history shows repeated no-update skips after 2026-04-01 11:47, with the latest recorded state still anchored to the 2026-04-01T11:10:00Z logic pulse."
+      }
+    ]
+  },
+  "confirmed_records": {
+    "product_and_feature_updates": [
+      {
+        "item": "Landing Hero / final manifest shipping work",
+        "status": "confirmed in pulse",
+        "notes": "Render Landing Hero with 1024 nodes count."
+      },
+      {
+        "item": "Seed data ShieldLevel hardening",
+        "status": "confirmed in pulse",
+        "notes": "Lock ShieldLevel=1 for all seed data."
+      },
+      {
+        "item": "Frontend page updates",
+        "status": "confirmed in logs",
+        "notes": "messages, resumes, search, profile and related pages updated."
+      },
+      {
+        "item": "Backend health and resiliency updates",
+        "status": "confirmed in logs",
+        "notes": "HealthController, HealthModule, RedisService.ping, AppModule wiring, retry increase."
+      },
+      {
+        "item": "Social component recovery",
+        "status": "confirmed in logs",
+        "notes": "Exchange phone, exchange WeChat, add friend, create group restored."
+      },
+      {
+        "item": "Revenue split and supporting backend services",
+        "status": "confirmed in logs",
+        "notes": "revenue-split.service.ts and related backend modules added."
+      }
+    ],
+    "issues_and_verification_gaps": [
+      {
+        "issue": "Remote deployment skipped in one automation run",
+        "cause": "Automation task did not execute user-confirmed remote operation.",
+        "resolution": "Manual deploy scripts were recommended for backend and frontend."
+      },
+      {
+        "issue": "Backend health returned 404 in one local verification pass",
+        "cause": "Health endpoint not yet configured in that snapshot.",
+        "resolution": "HealthController and HealthModule were added later to address it."
+      },
+      {
+        "issue": "No single authoritative merged checklist existed before this update",
+        "cause": "Records were split across pulse, deployment logs, workbuddy memory, and automation history.",
+        "resolution": "This file now acts as the merged manifest and checklist."
+      }
+    ]
+  },
+  "current_latest_state": {
+    "frontend": "Standalone deployment previously completed; build artifacts and public service checks exist in logs.",
+    "backend": "Local build succeeded; remote health verification should be rechecked against /api/health.",
+    "automation": "Logic pulse remained unchanged since 2026-04-01T11:10:00Z in the historical records.",
+    "deployment_guidance": [
+      "Re-verify backend health endpoint on the deployed environment.",
+      "Confirm whether the latest code base already includes the social component fix.",
+      "If any required feature is still only in logs, promote it into the implementation queue before release."
+    ]
+  },
+  "developer_checklist": [
+    {
+      "priority": "P0",
+      "task": "Confirm the latest deployed backend responds at /api/health.",
+      "status": "open"
+    },
+    {
+      "priority": "P0",
+      "task": "Confirm social action menu behaviors are present end-to-end in the deployed UI.",
+      "status": "open"
+    },
+    {
+      "priority": "P1",
+      "task": "Verify revenue split and guard/service changes are reflected in runtime and not only in local build artifacts.",
+      "status": "open"
+    },
+    {
+      "priority": "P1",
+      "task": "Audit whether any day-of deployment notes were never promoted into this manifest earlier.",
+      "status": "open"
+    }
+  ],
+  "next_sync": "11:00:00Z",
+  "file_note": "This file merges the historical records and current latest record as requested."
+}

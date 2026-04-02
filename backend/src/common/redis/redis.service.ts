@@ -90,6 +90,18 @@ export class RedisService implements OnModuleDestroy {
     this.memoryCache.delete(key);
   }
 
+  async ping(): Promise<boolean> {
+    if (this.redis) {
+      try {
+        await this.redis.ping();
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }
+    return false;
+  }
+
   async onModuleDestroy() {
     if (this.redis) {
       try {

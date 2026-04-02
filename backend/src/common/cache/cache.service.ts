@@ -41,14 +41,11 @@ export class CacheService implements OnModuleDestroy {
       port: Number(process.env.REDIS_PORT) || 6379,
       password: process.env.REDIS_PASSWORD || undefined,
       db: Number(process.env.REDIS_DB) || 0,
-      // 连接池配置
-      maxRetriesPerRequest: 3,
-      retryStrategy: (times) => {
-        if (times > 3) {
-          return null; // 停止重连
-        }
-        return Math.min(times * 50, 2000); // 指数退避
-      },
+      // 连接池配置 - 本地开发环境禁用重试
+      maxRetriesPerRequest: 0,
+      enableOfflineQueue: false,
+      retryStrategy: () => null,
+      connectTimeout: 1000,
     });
 
     // 监听连接错误

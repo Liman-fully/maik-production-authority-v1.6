@@ -22,6 +22,9 @@ async function bootstrap() {
     }),
   );
 
+  // 设置全局API前缀
+  app.setGlobalPrefix('api');
+
   // Swagger API文档配置
   const swaggerConfig = new DocumentBuilder()
     .setTitle('猎脉 API')
@@ -34,7 +37,7 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, document);
 
   const port = process.env.PORT || 3000;
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
   console.log(`🚀 HuntLink Backend running on: http://localhost:${port}`);
   console.log(`📖 API Docs: http://localhost:${port}/api/docs`);
 }
