@@ -65,7 +65,7 @@ interface TalentCardProps {
   onRequestResume?: () => void
 }
 
-export function TalentCard({ 
+export default function TalentCard({ 
   talent: rawTalent, 
   className, 
   variant = "default",
