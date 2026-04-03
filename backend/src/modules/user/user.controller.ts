@@ -27,6 +27,7 @@ export class UserController {
       name: user.name,
       phone: user.phone,
       role: user.role,
+      tier: user.tier,
       avatar: user.avatar,
       company: user.company,
       membership: membership ? {

@@ -83,13 +83,18 @@ export class ResumeService {
     }
 
     const resume = this.resumeRepository.create({
-      userId, filePath: cosKey, localPath: '', fileName: file.originalname,
+      userId, filePath: cosKey, localPath: filePath, fileName: file.originalname,
       fileSize: file.size, fileType: this.getFileType(file.originalname),
       cosUrl, cosKey, folderId, parseStatus: 'pending',
     });
 
     await this.resumeRepository.save(resume);
     await this.fastLocalParse(resume.id);
+    
+    // fastLocalParse 完成后清理本地临时文件
+    if (fs.existsSync(filePath)) {
+      try { fs.unlinkSync(filePath); } catch {}
+    }
     
     // 获取用户等级与注册时间，决定优先级与并发组
     const user = await this.resumeRepository.manager.getRepository('User').findOne({ where: { id: userId } }) as any;
@@ -117,7 +122,11 @@ export class ResumeService {
     const resume = await this.resumeRepository.findOne({ where: { id: resumeId } });
     if (!resume) return;
     try {
-      const text = await this.extractTextFromFile(resume.filePath);
+      // 优先使用本地临时文件（uploadResume 刚写入的），COS key 无法直接解析
+      const sourcePath = (resume.localPath && require('fs').existsSync(resume.localPath))
+        ? resume.localPath
+        : resume.filePath;
+      const text = await this.extractTextFromFile(sourcePath);
       const localResult = await this.localParseService.extractBasicInfo(text);
       resume.basicInfo = { ...resume.basicInfo, ...localResult };
       resume.parseStatus = 'processing';
@@ -247,8 +256,19 @@ export class ResumeService {
   }
 
   private async extractTextFromFile(filePath: string): Promise<string> {
-    // 实际应调用 PDF/Docx 解析库，此处保留主逻辑框架
-    return "张三，清华大学毕业，曾在字节跳动担任后端架构师。";
+    // TODO: 实现完整的文件解析 (PDF/DOCX)
+    // 注意：pdf-parse v2 是 ESM-only，需在 NestJS 中配置 ESM 支持
+    try {
+      const fileType = path.extname(filePath).toLowerCase();
+      if (['.txt', '.text'].includes(fileType)) {
+        return fs.readFileSync(filePath, 'utf-8');
+      }
+      // PDF/DOCX 解析留给 AI 队列中的外部 worker 处理
+      return `[${fileType} 文件，待外部解析器处理]`;
+    } catch (error) {
+      this.logger.error(`提取文件文本失败: ${filePath}`, error.stack);
+      return '';
+    }
   }
 
   private getFileType(fileName: string): string {

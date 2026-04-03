@@ -59,6 +59,7 @@ export class AuthService {
         phone: user.phone,
         name: user.name,
         role: user.role,
+        tier: user.tier,
         avatar: user.avatar,
         createdAt: user.createdAt,
       },
@@ -203,8 +204,7 @@ export class AuthService {
     const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
     const ttl = 15 * 60; // 15分钟
 
-    const redis = this.redisService.getClient();
-    await redis.setex(`reset:${user.id}`, ttl, resetCode);
+    await this.redisService.set(`reset:${user.id}`, resetCode, ttl);
 
     // 根据用户联系方式发送验证码
     if (user.email) {
