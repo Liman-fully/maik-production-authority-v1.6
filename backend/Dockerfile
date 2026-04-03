@@ -6,9 +6,9 @@ WORKDIR /app
 # 复制依赖文件
 COPY package*.json ./
 
-# 安装依赖（使用国内镜像加速）
+# 安装所有依赖（包括 devDependencies，构建需要）
 RUN npm config set registry https://mirrors.tencent.com/npm/ && \
-    npm ci --only=production
+    npm ci
 
 # 复制源代码
 COPY . .
@@ -21,13 +21,13 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# 复制构建产物和依赖
+# 复制构建产物
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./
 
-# 复制配置文件
-COPY ecosystem.config.js ./
+# 安装生产依赖
+COPY package*.json ./
+RUN npm config set registry https://mirrors.tencent.com/npm/ && \
+    npm ci --only=production
 
 # 设置环境变量
 ENV NODE_ENV=production
