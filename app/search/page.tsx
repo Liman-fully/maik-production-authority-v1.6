@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Navigation } from "@/components/navigation"
-import { TalentCard } from "@/components/talent-card"
+import TalentCard from "@/components/talent-card"
 import { FilterBar } from "@/components/filter-bar"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
