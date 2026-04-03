@@ -11,7 +11,6 @@ import { TalentFilterDto, JobStatus, SortBy, SortOrder } from './dto/talent-filt
 
 @ApiTags('人才广场')
 @Controller('talents')
-@UseGuards(JwtAuthGuard)
 export class TalentController {
   constructor(private readonly talentService: TalentService) {}
 

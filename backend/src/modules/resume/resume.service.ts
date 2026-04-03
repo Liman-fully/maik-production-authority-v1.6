@@ -53,12 +53,6 @@ export class ResumeService {
   }
 
   async uploadResume(userId: string, file: any, folderId?: string): Promise<Resume> {
-    // 文件大小检查（最大5MB）
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
-      throw new BadRequestException('文件大小不能超过5MB，请压缩后重试');
-    }
-
     const uploadDir = path.join(process.cwd(), 'uploads', 'resumes', userId);
     if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
@@ -71,19 +65,13 @@ export class ResumeService {
       const result = await this.cosService.uploadResume(userId, file.buffer, file.originalname);
       cosUrl = result.url;
       cosKey = result.key;
-      
-      // ✅ COS上传成功后立即删除本地文件，释放磁盘空间
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-        this.logger.log(`本地文件已清理: ${filePath}`);
-      }
     } catch (error) {
       if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
       throw new BadRequestException(`COS 上传失败: ${error.message}`);
     }
 
     const resume = this.resumeRepository.create({
-      userId, filePath: cosKey, localPath: '', fileName: file.originalname,
+      userId, filePath, localPath: filePath, fileName: file.originalname,
       fileSize: file.size, fileType: this.getFileType(file.originalname),
       cosUrl, cosKey, folderId, parseStatus: 'pending',
     });
@@ -136,14 +124,7 @@ export class ResumeService {
       await this.resumeRepository.save(resume);
 
       const resumeText = await this.extractTextFromFile(resume.filePath);
-      
-      // ✅ AI解析添加60秒超时保护
-      const aiResult = await Promise.race([
-        this.aiService.parseResumeText(resumeText),
-        new Promise<never>((_, reject) => 
-          setTimeout(() => reject(new Error('AI解析超时，请稍后重试')), 60000)
-        )
-      ]);
+      const aiResult = await this.aiService.parseResumeText(resumeText);
 
       // --- 科学去重与合并逻辑 ---
       const { score, tier } = this.calculateScoreAndTier(aiResult);
@@ -153,7 +134,7 @@ export class ResumeService {
           Object.assign(existingTalent, this.mapAiResultToTalent(aiResult));
           existingTalent.score = score;
           existingTalent.tier = tier;
-          await this.talentRepository.save(existingTalent as any);
+          await this.talentRepository.save(existingTalent as unknown as Talent);
         }
       }
 

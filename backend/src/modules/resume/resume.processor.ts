@@ -7,9 +7,9 @@ import { Logger } from '@nestjs/common';
 export class ResumeProcessor {
   private readonly logger = new Logger(ResumeProcessor.name);
   
-  // 并发控制：普通用户并发 2，付费/新用户并发 5（降低以避免OOM）
+  // 并发控制：普通用户并发 2，付费/新用户并发 10
   private runningCount = { 'default': 0, 'high-speed': 0 };
-  private limits = { 'default': 2, 'high-speed': 5 };
+  private limits = { 'default': 2, 'high-speed': 10 };
 
   constructor(private readonly resumeService: ResumeService) {}
 

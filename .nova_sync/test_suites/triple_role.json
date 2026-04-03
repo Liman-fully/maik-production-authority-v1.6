@@ -1,7 +1,0 @@
-{
-  "scenarios": [
-    {"role": "Candidate", "flow": "Register -> Mask_Post -> Resume_Upload -> Privacy_Check"},
-    {"role": "HR", "flow": "Talent_Search -> Affinity_Label_Verify -> Point_Exchange -> Call"},
-    {"role": "Headhunter", "flow": "Batch_Upload -> Revenue_Audit -> Network_Mining"}
-  ]
-}

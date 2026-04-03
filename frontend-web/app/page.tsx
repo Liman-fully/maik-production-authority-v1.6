@@ -119,6 +119,10 @@ export default function TalentSquarePage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [jobTitle, setJobTitle] = useState("")
   const [jobDesc, setJobDesc] = useState("")
+  const [jobLocation, setJobLocation] = useState("")
+  const [jobSalary, setJobSalary] = useState("")
+  const [jobEducation, setJobEducation] = useState("")
+  const [jobExperience, setJobExperience] = useState("")
   const [selectedSkills, setSelectedSkills] = useState<string[]>([])
   const [currentSkillCategory, setCurrentSkillCategory] = useState<string>("技术")
   const [selectedJobForRecommend, setSelectedJobForRecommend] = useState<string | null>(null)
@@ -144,7 +148,7 @@ export default function TalentSquarePage() {
         sortOrder: "DESC",
         industry: selectedCategory || undefined
       })
-      setTalents(response.data || [])
+      setTalents(response?.data || response || [])
     } catch (error) {
       console.error("Failed to fetch talents:", error)
     }
@@ -191,9 +195,21 @@ export default function TalentSquarePage() {
       await jobService.createJob({
         title: jobTitle,
         description: jobDesc,
+        location: jobLocation,
+        salary: jobSalary,
+        education: jobEducation,
+        experience: jobExperience,
+        skills: selectedSkills,
         status: "published"
       })
       setShowJobDialog(false)
+      setJobTitle("")
+      setJobDesc("")
+      setJobLocation("")
+      setJobSalary("")
+      setJobEducation("")
+      setJobExperience("")
+      setSelectedSkills([])
       fetchMyJobs()
     } catch (error) {
       console.error("Failed to post job:", error)
@@ -204,7 +220,7 @@ export default function TalentSquarePage() {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <main className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+      <main className="mx-auto w-full max-w-[1440px] px-4 py-4 sm:px-6 lg:px-8">
         {/* Hero Section - Compact */}
         <section className="mb-4">
           <div className="flex flex-col gap-3 rounded-xl bg-gradient-to-br from-primary/5 via-accent/50 to-background p-4 sm:flex-row sm:items-center sm:justify-between">
@@ -382,9 +398,9 @@ export default function TalentSquarePage() {
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-5 py-2">
+          <div className="space-y-4 py-2">
             <div className="space-y-2">
-              <Label htmlFor="job-title" className="text-xs">职位名称</Label>
+              <Label htmlFor="job-title" className="text-xs">职位名称 <span className="text-destructive">*</span></Label>
               <Input 
                 id="job-title" 
                 placeholder="例如：高级前端工程师" 
@@ -393,10 +409,66 @@ export default function TalentSquarePage() {
                 onChange={(e) => setJobTitle(e.target.value)}
               />
             </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label htmlFor="job-location" className="text-xs">工作地点</Label>
+                <Input 
+                  id="job-location" 
+                  placeholder="例如：北京" 
+                  className="h-10"
+                  value={jobLocation}
+                  onChange={(e) => setJobLocation(e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="job-salary" className="text-xs">薪资范围</Label>
+                <Input 
+                  id="job-salary" 
+                  placeholder="例如：25-40K" 
+                  className="h-10"
+                  value={jobSalary}
+                  onChange={(e) => setJobSalary(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label htmlFor="job-education" className="text-xs">学历要求</Label>
+                <Select value={jobEducation} onValueChange={setJobEducation}>
+                  <SelectTrigger className="h-10 text-xs">
+                    <SelectValue placeholder="请选择" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="不限">不限</SelectItem>
+                    <SelectItem value="大专">大专</SelectItem>
+                    <SelectItem value="本科">本科</SelectItem>
+                    <SelectItem value="硕士">硕士</SelectItem>
+                    <SelectItem value="博士">博士</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="job-experience" className="text-xs">经验要求</Label>
+                <Select value={jobExperience} onValueChange={setJobExperience}>
+                  <SelectTrigger className="h-10 text-xs">
+                    <SelectValue placeholder="请选择" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="不限">不限</SelectItem>
+                    <SelectItem value="1-3年">1-3年</SelectItem>
+                    <SelectItem value="3-5年">3-5年</SelectItem>
+                    <SelectItem value="5-10年">5-10年</SelectItem>
+                    <SelectItem value="10年以上">10年以上</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
             
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="job-desc" className="text-xs">职位描述</Label>
+                <Label htmlFor="job-desc" className="text-xs">职位描述 <span className="text-destructive">*</span></Label>
                 <Button 
                   variant="ghost" 
                   size="sm" 
@@ -416,6 +488,29 @@ export default function TalentSquarePage() {
                 onChange={(e) => setJobDesc(e.target.value)}
               />
             </div>
+
+            {selectedSkills.length > 0 && (
+              <div className="space-y-2">
+                <Label className="text-xs">技能标签</Label>
+                <div className="flex flex-wrap gap-1.5">
+                  {selectedSkills.map((skill) => (
+                    <Badge
+                      key={skill}
+                      variant="secondary"
+                      className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] text-primary"
+                    >
+                      {skill}
+                      <button
+                        className="ml-1 rounded-full hover:bg-primary/20"
+                        onClick={() => toggleSkill(skill)}
+                      >
+                        <X className="h-2.5 w-2.5" />
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <DialogFooter className="pt-4">
@@ -519,235 +614,6 @@ export default function TalentSquarePage() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowRecommendDialog(false)}>
               关闭
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
-  )
-}
-                    <SelectItem value="60k+">60K以上</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label className="text-xs">学历要求</Label>
-                <Select>
-                  <SelectTrigger className="h-10">
-                    <SelectValue placeholder="选择学历" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="any">不限</SelectItem>
-                    <SelectItem value="college">大专</SelectItem>
-                    <SelectItem value="bachelor">本科</SelectItem>
-                    <SelectItem value="master">硕士</SelectItem>
-                    <SelectItem value="phd">博士</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="job-desc" className="text-xs">职位描述</Label>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-6 gap-1.5 rounded-full bg-primary/10 px-2.5 text-[10px] text-primary hover:bg-primary/20"
-                  onClick={suggestSkillsFromDesc}
-                >
-                  <Wand2 className="h-3 w-3" />
-                  AI 提取技能
-                </Button>
-              </div>
-              <Textarea 
-                id="job-desc" 
-                placeholder="描述职位职责、要求、福利待遇等..."
-                rows={4}
-                className="text-sm"
-                value={jobDesc}
-                onChange={(e) => setJobDesc(e.target.value)}
-              />
-            </div>
-
-            {/* Skill Tags Selection */}
-            <div className="space-y-2">
-              <Label className="text-xs">技能要求</Label>
-              <div className="flex gap-2 border-b border-border/40 pb-2">
-                {Object.keys(skillTags).map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setCurrentSkillCategory(cat)}
-                    className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
-                      currentSkillCategory === cat 
-                        ? "bg-primary text-primary-foreground" 
-                        : "bg-accent text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
-              <div className="flex flex-wrap gap-2 pt-1">
-                {skillTags[currentSkillCategory as keyof typeof skillTags].map((skill) => {
-                  const isSelected = selectedSkills.includes(skill)
-                  return (
-                    <button
-                      key={skill}
-                      onClick={() => toggleSkill(skill)}
-                      className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-xs transition-all ${
-                        isSelected 
-                          ? "bg-primary text-primary-foreground" 
-                          : "bg-accent text-muted-foreground hover:bg-accent/80"
-                      }`}
-                    >
-                      {isSelected && <Check className="h-3 w-3" />}
-                      {skill}
-                    </button>
-                  )
-                })}
-              </div>
-              {selectedSkills.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 pt-2">
-                  <span className="text-[10px] text-muted-foreground">已选：</span>
-                  {selectedSkills.map((skill) => (
-                    <Badge 
-                      key={skill} 
-                      variant="secondary"
-                      className="cursor-pointer gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] text-primary hover:bg-primary/20"
-                      onClick={() => toggleSkill(skill)}
-                    >
-                      {skill}
-                      <X className="h-2.5 w-2.5" />
-                    </Badge>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
-          <DialogFooter className="pt-4">
-            <Button variant="outline" onClick={() => setShowJobDialog(false)}>
-              取消
-            </Button>
-            <Button onClick={() => setShowJobDialog(false)}>
-              <Plus className="mr-1.5 h-3.5 w-3.5" />
-              发布职位
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* All Categories Dialog - Three-level */}
-      <Dialog open={showAllCategories} onOpenChange={setShowAllCategories}>
-        <DialogContent className="max-h-[80vh] max-w-2xl overflow-hidden p-0">
-          <DialogHeader className="border-b border-border/40 px-6 py-4">
-            <DialogTitle className="text-base">全部领域</DialogTitle>
-            <DialogDescription className="text-xs">选择职位类别筛选人才</DialogDescription>
-          </DialogHeader>
-          <div className="flex h-96">
-            {/* 一级分类 */}
-            <div className="w-28 shrink-0 overflow-y-auto border-r border-border/40 bg-accent/30">
-              {Object.keys(jobCategories).map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => {
-                    setExpandedCategory(expandedCategory === cat ? null : cat)
-                    setExpandedSubCategory(null)
-                  }}
-                  className={`flex w-full items-center justify-between px-4 py-3 text-xs font-medium transition-colors ${
-                    expandedCategory === cat 
-                      ? "bg-background text-primary" 
-                      : "text-foreground hover:bg-background/50"
-                  }`}
-                >
-                  {cat}
-                  <ChevronRight className={`h-3 w-3 transition-transform ${expandedCategory === cat ? "rotate-90" : ""}`} />
-                </button>
-              ))}
-            </div>
-            
-            {/* 二级分类 */}
-            {expandedCategory && (
-              <div className="w-36 shrink-0 overflow-y-auto border-r border-border/40">
-                {Object.keys(jobCategories[expandedCategory as keyof typeof jobCategories]).map((subCat) => (
-                  <button
-                    key={subCat}
-                    onClick={() => setExpandedSubCategory(expandedSubCategory === subCat ? null : subCat)}
-                    className={`flex w-full items-center justify-between px-4 py-2.5 text-xs transition-colors ${
-                      expandedSubCategory === subCat 
-                        ? "bg-primary/10 text-primary" 
-                        : "text-foreground hover:bg-accent"
-                    }`}
-                  >
-                    {subCat}
-                    <ChevronRight className={`h-3 w-3 transition-transform ${expandedSubCategory === subCat ? "rotate-90" : ""}`} />
-                  </button>
-                ))}
-              </div>
-            )}
-            
-            {/* 三级分类 */}
-            {expandedCategory && expandedSubCategory && (
-              <div className="flex-1 overflow-y-auto p-4">
-                <div className="flex flex-wrap gap-2">
-                  {jobCategories[expandedCategory as keyof typeof jobCategories][expandedSubCategory as keyof typeof jobCategories[keyof typeof jobCategories]]?.map((job: string) => (
-                    <Button
-                      key={job}
-                      variant="outline"
-                      size="sm"
-                      className="h-8 rounded-full text-xs"
-                      onClick={() => {
-                        setSelectedCategory(job)
-                        setShowAllCategories(false)
-                      }}
-                    >
-                      {job}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {/* Empty state */}
-            {!expandedCategory && (
-              <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
-                请选择左侧领域
-              </div>
-            )}
-            {expandedCategory && !expandedSubCategory && (
-              <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
-                请选择职位类别
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Recommend Dialog */}
-      <Dialog open={showRecommendDialog} onOpenChange={setShowRecommendDialog}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-base">
-              <Sparkles className="h-4 w-4 text-primary" />
-              智能推荐人才
-            </DialogTitle>
-            <DialogDescription className="text-xs">
-              根据「{myJobs.find(j => j.id === selectedJobForRecommend)?.title || "职位"}」为您精选匹配人才
-            </DialogDescription>
-          </DialogHeader>
-          <div className="max-h-96 space-y-1.5 overflow-y-auto py-4">
-            {getRecommendedTalents().map((talent) => (
-              <TalentCard key={talent.id} talent={talent} />
-            ))}
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowRecommendDialog(false)}>
-              关闭
-            </Button>
-            <Button>
-              <Sparkles className="mr-1.5 h-3.5 w-3.5" />
-              刷新推荐
             </Button>
           </DialogFooter>
         </DialogContent>

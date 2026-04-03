@@ -56,6 +56,39 @@ export class CosService {
     }
   }
 
+  async uploadAvatar(
+    userId: string,
+    buffer: Buffer,
+    fileName: string,
+  ): Promise<{ url: string; key: string }> {
+    try {
+      // Get file extension
+      const ext = fileName.split('.').pop() || 'jpg';
+      const timestamp = Date.now();
+      const key = `avatars/${userId}/avatar_${timestamp}.${ext}`;
+
+      await new Promise<void>((resolve, reject) => {
+        this.cos.putObject({
+          Bucket: this.bucket,
+          Region: this.region,
+          Key: key,
+          Body: buffer,
+          ContentType: `image/${ext === 'jpg' ? 'jpeg' : ext}`,
+        }, (err, data) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      });
+
+      const url = `https://${this.bucket}.cos.${this.region}.myqcloud.com/${key}`;
+      console.log(`[COS] Avatar upload success: ${url}`);
+      return { url, key };
+    } catch (error) {
+      console.error('[COS] Avatar upload failed:', error);
+      throw error;
+    }
+  }
+
   async downloadFile(url: string): Promise<Buffer> {
     const key = url.replace(`https://${this.bucket}.cos.${this.region}.myqcloud.com/`, '');
     return new Promise((resolve, reject) => {

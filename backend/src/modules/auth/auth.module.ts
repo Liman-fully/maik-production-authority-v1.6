@@ -17,14 +17,11 @@ import { SmsModule } from '../../common/sms/sms.module';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        const secret = configService.get<string>('JWT_SECRET');
-        if (!secret) {
-          throw new Error('JWT_SECRET environment variable is required');
-        }
+      useFactory: () => {
+        const secret = process.env.JWT_SECRET || 'huntlink-jwt-secret-key-2026-change-in-production';
         return {
           secret,
-          signOptions: { expiresIn: '7d' },
+          signOptions: { expiresIn: process.env.JWT_EXPIRATION || '7d' },
         };
       },
     }),

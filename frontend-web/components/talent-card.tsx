@@ -56,6 +56,8 @@ interface TalentCardProps {
     score?: number // 人才评估分
     industry?: string // 行业标签
     function?: string // 职能标签
+    tier?: string // 人才等级 (S, A, B, C)
+    logic_tier?: string // 逻辑层级 (用于 Nova 审美要求)
   }
   className?: string
   variant?: "default" | "library" // default=人才广场, library=简历库
@@ -149,10 +151,28 @@ export function TalentCard({
     setShowProfile(true)
   }
 
+  // 根据 logic_tier 或 tier 确定背景颜色
+  const getBackgroundClass = () => {
+    const tier = rawTalent.logic_tier || rawTalent.tier || 'C';
+    switch (tier) {
+      case 'S':
+        return "bg-gradient-to-br from-[oklch(0.95_0.02_260)] to-[oklch(0.92_0.02_260)]"; // Soft-Slate 最高级
+      case 'A':
+        return "bg-gradient-to-br from-[oklch(0.93_0.02_260)] to-[oklch(0.90_0.02_260)]"; // Soft-Slate A级
+      case 'B':
+        return "bg-gradient-to-br from-[oklch(0.91_0.02_260)] to-[oklch(0.88_0.02_260)]"; // Soft-Slate B级
+      case 'C':
+        return "bg-gradient-to-br from-[oklch(0.89_0.02_260)] to-[oklch(0.86_0.02_260)]"; // Soft-Slate C级
+      default:
+        return "bg-card";
+    }
+  };
+
   return (
     <>
       <div className={cn(
-        "group flex cursor-pointer items-start gap-2 rounded-lg bg-card px-2.5 py-2 shadow-sm transition-all duration-200 hover:bg-accent/30 hover:shadow",
+        "group flex cursor-pointer items-start gap-2 rounded-lg px-2.5 py-2 shadow-sm transition-all duration-200 hover:shadow hover:scale-[1.01]",
+        getBackgroundClass(),
         className
       )}>
         {/* Avatar - Click to open profile */}

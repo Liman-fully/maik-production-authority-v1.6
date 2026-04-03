@@ -15,7 +15,7 @@ module.exports = {
   apps: [
     {
       name: 'huntlink-backend',
-      script: './dist/src/main.js',
+      script: './current/dist/src/main.js',
       instances: 1,
       exec_mode: 'fork',
       watch: false,

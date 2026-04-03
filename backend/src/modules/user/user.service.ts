@@ -28,4 +28,8 @@ export class UserService {
   async countByIdCard(idCard: string): Promise<number> {
     return this.userRepo.count({ where: { idCard } });
   }
+
+  async save(user: User): Promise<User> {
+    return this.userRepo.save(user);
+  }
 }
