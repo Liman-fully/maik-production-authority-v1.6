@@ -43,7 +43,8 @@ export class TalentService {
    */
   private async getFromCache(key: string): Promise<any | null> {
     try {
-      const cached = await this.redisService.getClient().get(key);
+      // 修复: 使用 redisService.get() 支持降级
+      const cached = await this.redisService.get(key);
       if (cached) {
         return JSON.parse(cached);
       }
@@ -58,11 +59,8 @@ export class TalentService {
    */
   private async setCache(key: string, value: any): Promise<void> {
     try {
-      await this.redisService.getClient().setex(
-        key,
-        this.CACHE_TTL,
-        JSON.stringify(value),
-      );
+      // 修复: 使用 redisService.set() 支持降级
+      await this.redisService.set(key, JSON.stringify(value), this.CACHE_TTL);
     } catch (error) {
       console.error('Redis cache set error:', error);
     }
