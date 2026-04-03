@@ -24,8 +24,8 @@ export class AuthService {
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     const ttl = 5 * 60; // 5 minutes
 
-    const redis = this.redisService.getClient();
-    await redis.setex(`sms:${dto.phone}`, ttl, code);
+    // 修复: 使用 redisService.set() 而不是直接调用 getClient().setex()，以支持内存缓存降级
+    await this.redisService.set(`sms:${dto.phone}`, code, ttl);
 
     // Get template ID based on type
     const templateId = dto.type === 'register' 
@@ -39,14 +39,14 @@ export class AuthService {
   }
 
   private async verifySmsCode(phone: string, code: string): Promise<boolean> {
-    const redis = this.redisService.getClient();
-    const storedCode = await redis.get(`sms:${phone}`);
+    // 修复: 使用 redisService.get() 支持降级
+    const storedCode = await this.redisService.get(`sms:${phone}`);
 
     if (!storedCode) return false;
     if (storedCode !== code) return false;
 
     // Delete verification code after successful verification (prevent reuse)
-    await redis.del(`sms:${phone}`);
+    await this.redisService.del(`sms:${phone}`);
     return true;
   }
 

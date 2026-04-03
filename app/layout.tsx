@@ -9,8 +9,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'TalentHub - 招聘社交平台',
-  description: '连接优秀人才与卓越企业的智能招聘平台',
+  title: '脉刻 MAIK - 人才伯乐平台',
+  description: '脉刻 MAIK - 让每个人都是人才伯乐',
   generator: 'v0.app',
   icons: {
     icon: [

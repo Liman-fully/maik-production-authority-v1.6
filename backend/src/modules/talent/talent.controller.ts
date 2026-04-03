@@ -2,16 +2,14 @@ import {
   Controller,
   Get,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { TalentService } from './talent.service';
 import { TalentFilterDto, JobStatus, SortBy, SortOrder } from './dto/talent-filter.dto';
 
 @ApiTags('人才广场')
 @Controller('talents')
-@UseGuards(JwtAuthGuard)
+// 修复: 人才广场接口公开访问，不需要登录即可查看
 export class TalentController {
   constructor(private readonly talentService: TalentService) {}
 
