@@ -46,7 +46,7 @@ export class TalentService {
       // 修复: 使用 redisService.get() 支持降级
       const cached = await this.redisService.get(key);
       if (cached) {
-        return JSON.parse(cached);
+        return JSON.parse(cached as string);
       }
     } catch (error) {
       console.error('Redis cache get error:', error);
