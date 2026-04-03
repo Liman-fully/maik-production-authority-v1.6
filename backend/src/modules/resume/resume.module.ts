@@ -17,11 +17,12 @@ import { MetadataModule } from '../metadata/metadata.module';
 import { ScoreModule } from '../score/score.module';
 import { RecommendationModule } from '../recommendation/recommendation.module';
 import { Talent } from '../talent/talent.entity';
+import { User } from '../user/user.entity';
 import { RevenueSplitService } from './revenue-split.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Resume, ResumeFolder, Talent]),
+    TypeOrmModule.forFeature([Resume, ResumeFolder, Talent, User]),
     CosModule,
     MetadataModule,
     ScoreModule,
