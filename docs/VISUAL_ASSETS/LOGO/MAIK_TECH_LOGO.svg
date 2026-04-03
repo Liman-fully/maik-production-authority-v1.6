@@ -1,0 +1,11 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="tech_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00D1FF" />
+      <stop offset="100%" stop-color="#007AFF" />
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" rx="32" fill="#0A192F"/>
+  <path d="M50 140V60L100 110L150 60V140" stroke="url(#tech_grad)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="100" cy="115" r="8" fill="#FFD700" filter="drop-shadow(0px 0px 8px #FFD700)"/>
+</svg>

@@ -1,0 +1,14 @@
+[
+  { "name": "Guang", "email": "thelab.guang@gmail.com", "authCode": "abcd-efgh-ijkl-mnop" },
+  { "name": "Da", "email": "thelab.da@gmail.com", "authCode": "qrst-uvwx-yzab-cdef" },
+  { "name": "Zhi", "email": "thelab.zhi@gmail.com", "authCode": "ghij-klmn-opqr-stuv" },
+  { "name": "Hui", "email": "thelab.hui@gmail.com", "authCode": "wxyz-abcd-efgh-ijkl" },
+  { "name": "Zhen", "email": "thelab.zhen@gmail.com", "authCode": "mnop-qrst-uvwx-yzab" },
+  { "name": "Ru", "email": "thelab.ru@gmail.com", "authCode": "cdef-ghij-klmn-opqr" },
+  { "name": "Xing", "email": "thelab.xing@gmail.com", "authCode": "stuv-wxyz-abcd-efgh" },
+  { "name": "Hai", "email": "thelab.hai@gmail.com", "authCode": "ijkl-mnop-qrst-uvwx" },
+  { "name": "Ying", "email": "thelab.ying@gmail.com", "authCode": "yzab-cdef-ghij-klmn" },
+  { "name": "Wu", "email": "thelab.wu@gmail.com", "authCode": "opqr-stuv-wxyz-abcd" },
+  { "name": "Yuan", "email": "thelab.yuan@gmail.com", "authCode": "efgh-ijkl-mnop-qrst" },
+  { "name": "Jue", "email": "thelab.jue@gmail.com", "authCode": "uvwx-yzab-cdef-ghij" }
+]

@@ -1,31 +1,35 @@
-# 🔱 猎脉 (Huntlink) 招聘平台
+# v0-ui
 
-本项目是一个基于 NestJS (后端) 与 React (前端) 构建的全栈自动化招聘引擎。专为极低资源环境 (2G RAM / 50G Disk) 优化，集成了高感知的全文搜索与云原生附件管理。
+This is a [Next.js](https://nextjs.org) project bootstrapped with [v0](https://v0.app).
 
-## 🚀 核心架构与上线关键 (The Golden Rules)
+## Built with v0
 
-基于历史审计与 2G 内存实战，本仓库严格遵守以下“生产铁律”：
+This repository is linked to a [v0](https://v0.app) project. You can continue developing by visiting the link below -- start new chats to make changes, and v0 will push commits directly to this repo. Every merge to `main` will automatically deploy.
 
-1. **禁止在线构建**：严禁在生产服务器执行 `npm run build`。必须在 CI/CD 完成编译，打包 `release.tar.gz` 后分发。
-2. **内存配额**：Node 程序必须设置内存限制 `NODE_OPTIONS="--max-old-space-size=1536"`。
-3. **云存储优先**：简历原件强制走腾讯云 COS 预签名直传，后端仅处理字符串元数据。
-4. **数据库索引**：利用 PostgreSQL GIN 索引驱动全文搜索，严禁 `LIKE '%keyword%'`。
+[Continue working on v0 →](https://v0.app/chat/projects/prj_RhihBGxh10FaNOlZ4eFMCpveY9a9)
 
-## 🛠 快速开始
+## Getting Started
 
-### 后端 (Backend)
+First, run the development server:
+
 ```bash
-cd backend
-npm install
-npm run start:dev
-```
-
-### 前端 (Frontend)
-```bash
-cd frontend-web
-npm install
 npm run dev
+# or
+yarn dev
+# or
+pnpm dev
 ```
 
-## 🛡 维护手册
-关于部署、数据库迁移及 API 映射的详细指南，请参阅 `docs/` 目录下的相关文件。
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+## Learn More
+
+To learn more, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [v0 Documentation](https://v0.app/docs) - learn about v0 and how to use it.
+
+<a href="https://v0.app/chat/api/kiro/clone/Liman-fully/v0-ui" alt="Open in Kiro"><img src="https://pdgvvgmkdvyeydso.public.blob.vercel-storage.com/open%20in%20kiro.svg?sanitize=true" /></a>
