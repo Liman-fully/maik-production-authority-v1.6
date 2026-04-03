@@ -65,7 +65,7 @@ import { TalentEventListener } from './modules/talent/talent-event-listener';
         password: configService.get('DB_PASSWORD') || configService.get('DB_PASS') || '',
         database: configService.get('DB_DATABASE') || configService.get('DB_NAME') || 'huntlink',
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: configService.get('NODE_ENV') !== 'production',
+        synchronize: false, // 生产环境严禁自动同步，防止 OOM 和数据损坏
         logging: false,
         retryDelay: 5000,
         retryAttempts: 99,

@@ -462,8 +462,8 @@ class ResumeDataGenerator {
     const expectedSalary = generateSalary(years, tierInfo.tier);
     
     // 生成期望职位
-    const positions = POSITIONS_BY_DOMAIN[domain] || POSITIONS_BY_DOMAIN['技术'];
-    const expectedPosition = randomChoice(positions);
+    const positions: string[] = POSITIONS_BY_DOMAIN[domain] || POSITIONS_BY_DOMAIN['技术'];
+    const expectedPosition: string = randomChoice(positions);
     
     return {
       userId,
