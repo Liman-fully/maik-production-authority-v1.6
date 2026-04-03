@@ -29,6 +29,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3001
+ENV HOSTNAME=0.0.0.0
 
 # 复制必要文件
 COPY --from=builder /app/.next/standalone ./
